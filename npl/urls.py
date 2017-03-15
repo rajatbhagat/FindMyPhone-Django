@@ -19,4 +19,5 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include('findmyphone.urls')),
+    url(r'^website/', include('website.urls')),
 ]
