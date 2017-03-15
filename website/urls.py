@@ -3,5 +3,5 @@ from website import views
 
 urlpatterns = [
     url(r'^home/$', views.index, name='home'),
-    url(r'^login/$', views.user_login, name='user-login'),
+    url(r'^locate-phone/$', views.get_location, name='locate-phone'),
 ]

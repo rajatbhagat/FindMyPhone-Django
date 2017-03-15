@@ -13,19 +13,23 @@ def index(request):
 def user_login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
-        print(username)
         password = request.POST.get('password')
-        print(password)
         user = authenticate(username=username, password=password)
         if user:
             if user.is_active:
                 login(request, user)
                 print('Success')
-                return render(request, 'website/googlemap.html', {})
+                return render(request, 'website/googlemaps.html', {})
             else:
                 print('Account blocked')
-                return HttpResponse('Account bloacked')
+                return render(request, 'website/home.html', {})
         else:
-            return HttpResponse('Invalid details')
+            print('Wrong details entered')
+            return render(request, 'website/home.html', {})
     else:
-        return HttpResponse('POST not identified')
+        print('POST method not working')
+        return render(request, 'website/home.html', {})
+
+
+def get_location(request):
+    return render(request, 'website/googlemaps.html', {})
