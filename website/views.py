@@ -1,9 +1,12 @@
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
 from django.shortcuts import render
-
+from django.contrib.auth.models import User
+from findmyphone.models import Device
 
 # Create your views here.
+username = 'student'
+
 
 def index(request):
     user_login(request)
@@ -12,14 +15,17 @@ def index(request):
 
 def user_login(request):
     if request.method == 'POST':
+        global username
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(username=username, password=password)
         if user:
             if user.is_active:
+                user_details = {'username': username}
+                print(user_details)
                 login(request, user)
                 print('Success')
-                return render(request, 'website/googlemaps.html', {})
+                return render(request, 'website/googlemaps.html', user_details)
             else:
                 print('Account blocked')
                 return render(request, 'website/home.html', {})
@@ -32,4 +38,24 @@ def user_login(request):
 
 
 def get_location(request):
+    recieve_data(request)
     return render(request, 'website/googlemaps.html', {})
+
+
+def recieve_data(request):
+    location = {}
+    if request.method == 'POST':
+        current_latitude = request.POST.get('current_latitude')
+        print(current_latitude)
+        current_longitude = request.POST.get('current_longitude')
+        print(current_longitude)
+        location = {'latitude': current_latitude, 'longitude': current_longitude}
+        user = User.objects.get(username=username)
+        device = Device.objects.get(user=user)
+        device.latitude = current_latitude
+        device.longitude = current_longitude
+        device.save()
+        return render(request, 'website/googlemaps.html', location)
+    else:
+        print('POST method not identified')
+        return render(request, 'website/googlemaps.html', {})
