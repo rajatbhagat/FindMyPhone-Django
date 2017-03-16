@@ -38,7 +38,7 @@ def user_login(request):
 
 
 def get_location(request):
-    recieve_data(request)
+    # recieve_data(request)
     return render(request, 'website/googlemaps.html', {})
 
 
